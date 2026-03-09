@@ -1,0 +1,89 @@
+
+.authPage {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top, var(--auth-grad-start) 0%, var(--auth-grad-mid) 45%, var(--auth-grad-end) 100%);
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.authCard {
+    width: 100%;
+    max-width: 420px;
+    background-color: var(--auth-card-bg);
+    border: 1px solid var(--auth-card-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.authCard h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.authSubtext {
+    color: var(--text-muted);
+    margin: 0.5rem 0 1.2rem;
+    font-size: 0.95rem;
+}
+
+.authTabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.authTabs button {
+    margin: 0;
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    padding: 0.6rem;
+    background: transparent;
+    cursor: pointer;
+}
+
+.authTabs button.activeTab {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+}
+
+.authForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.authForm input {
+    border: none;
+    background-color: var(--bg-input);
+    padding: 0.8rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+}
+
+.authError {
+    color: #f87171;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.authSubmit {
+    background-color: var(--accent) !important;
+    color: #ffffff;
+    border: none !important;
+    justify-content: center !important;
+    margin: 0.3rem 0 0;
+    padding: 0.8rem !important;
+    cursor: pointer;
+}
+
+.authSubmit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

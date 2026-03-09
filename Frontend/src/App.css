@@ -1,14 +1,57 @@
 * {
-    color: #ececec;
+    color: var(--text-primary);
     font-family: Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+:root {
+    --bg-page: #212121;
+    --bg-sidebar: #171717;
+    --bg-surface: #323232;
+    --bg-input: rgba(255, 255, 255, 0.05);
+    --bg-hover: rgba(180, 180, 180, 0.08);
+    --text-primary: #ececec;
+    --text-muted: #b4b4b4;
+    --border-soft: rgba(255, 255, 255, 0.5);
+    --accent: #339cff;
+    --auth-grad-start: #333333;
+    --auth-grad-mid: #161616;
+    --auth-grad-end: #111111;
+    --auth-card-bg: #1f1f1f;
+    --auth-card-border: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="light"] {
+    --bg-page: #f3f4f6;
+    --bg-sidebar: #e5e7eb;
+    --bg-surface: #d1d5db;
+    --bg-input: rgba(17, 24, 39, 0.06);
+    --bg-hover: rgba(17, 24, 39, 0.08);
+    --text-primary: #111827;
+    --text-muted: #374151;
+    --border-soft: rgba(17, 24, 39, 0.35);
+    --accent: #2563eb;
+    --auth-grad-start: #eef2ff;
+    --auth-grad-mid: #e5e7eb;
+    --auth-grad-end: #dbeafe;
+    --auth-card-bg: #ffffff;
+    --auth-card-border: rgba(17, 24, 39, 0.12);
 }
 
 body {
     margin: 0;
     padding: 0;
+    background-color: var(--bg-page);
 }
 
 .app {
-    background-color: #212121;
+    background-color: var(--bg-page);
     display: flex;
+}
+
+.authLoading {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-page);
 }

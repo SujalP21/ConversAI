@@ -6,8 +6,8 @@ A full-stack ChatGPT-style web app built with React + Express + MongoDB + OpenAI
 
 This project has two apps:
 
-- `Frontend/`: React UI for chat, thread history, thread switching, and deleting chats.
-- `Backend/`: Express API that stores chats in MongoDB and generates assistant replies using OpenAI.
+- `Frontend/`: React UI for authentication, chat, thread history, thread switching, deleting chats, and theme switching.
+- `Backend/`: Express API with JWT authentication, user-specific thread storage, and OpenAI reply generation.
 
 ## Tech Stack
 
@@ -23,7 +23,11 @@ GPT/
 	Backend/
 		models/
 			Thread.js
+			User.js
+		middleware/
+			auth.js
 		routes/
+			auth.js
 			chat.js
 		utils/
 			openai.js
@@ -44,7 +48,12 @@ GPT/
 ## Features
 
 - Create a new chat thread automatically on first message
+- Register and login with email/password
+- Token-based session persistence in frontend (`localStorage`)
 - Persist threads and messages in MongoDB
+- Scope all threads to the authenticated user
+- Dark/Light theme toggle from profile dropdown `Settings`
+- Theme preference persistence in frontend (`localStorage`)
 - View all threads in sidebar
 - Re-open an old thread and load full message history
 - Delete thread from sidebar
@@ -58,6 +67,7 @@ Create `Backend/.env` with:
 ```env
 OPENAI_API_KEY=your_openai_api_key
 MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_strong_jwt_secret
 ```
 
 Notes:
@@ -102,13 +112,39 @@ Then open the URL shown by Vite (typically `http://localhost:5173`).
 
 Backend runs on `http://localhost:8080`.
 
+Theme switch path: profile icon -> `Settings` -> choose `Dark` or `Light`.
+
 ## API Reference
 
 Base URL: `http://localhost:8080/api`
 
+### POST `/auth/register`
+
+Create a user account.
+
+### POST `/auth/login`
+
+Login and get JWT token.
+
+### GET `/auth/me`
+
+Get currently logged-in user profile.
+
+Requires header:
+
+```text
+Authorization: Bearer <token>
+```
+
 ### POST `/chat`
 
 Send a message and get assistant reply. Creates thread if missing.
+
+Requires header:
+
+```text
+Authorization: Bearer <token>
+```
 
 Request body:
 
@@ -131,13 +167,19 @@ Response:
 
 Fetch all threads sorted by latest `updatedAt`.
 
+Requires header: `Authorization: Bearer <token>`
+
 ### GET `/thread/:threadId`
 
 Fetch messages for one thread.
 
+Requires header: `Authorization: Bearer <token>`
+
 ### DELETE `/thread/:threadId`
 
 Delete one thread.
+
+Requires header: `Authorization: Bearer <token>`
 
 ### POST `/test`
 
@@ -147,7 +189,8 @@ Dev test route that inserts a sample thread document.
 
 `Thread` document:
 
-- `threadId` (unique string)
+- `userId` (owner user id)
+- `threadId` (unique per user)
 - `title` (string)
 - `messages` (array)
 	- `role`: `user` or `assistant`
@@ -178,8 +221,7 @@ Ensure backend is running on port `8080` and frontend is using `http://localhost
 
 ## Current Limitations
 
-- Frontend API URLs are hardcoded to `http://localhost:8080`.
-- No auth/session management.
+- Frontend API base URL defaults to `http://localhost:8080` unless `VITE_API_BASE_URL` is set.
 - No streaming responses from OpenAI.
 - No production deployment config yet.
 

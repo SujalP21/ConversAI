@@ -2,13 +2,28 @@ import "./Sidebar.css";
 import { useContext, useEffect } from "react";
 import { MyContext } from "./MyContext.jsx";
 import {v1 as uuidv1} from "uuid";
+import { API_BASE_URL } from "./config";
 
 function Sidebar() {
-    const {allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats} = useContext(MyContext);
+    const {allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats, authToken, user, logout, threadsRefreshTick} = useContext(MyContext);
 
     const getAllThreads = async () => {
+        if (!authToken) return;
+
         try {
-            const response = await fetch("http://localhost:8080/api/thread");
+            const response = await fetch(`${API_BASE_URL}/api/thread`, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    logout();
+                }
+                return;
+            }
+
             const res = await response.json();
             const filteredData = res.map(thread => ({threadId: thread.threadId, title: thread.title}));
             //console.log(filteredData);
@@ -20,7 +35,7 @@ function Sidebar() {
 
     useEffect(() => {
         getAllThreads();
-    }, [currThreadId])
+    }, [currThreadId, authToken, threadsRefreshTick])
 
 
     const createNewChat = () => {
@@ -35,7 +50,19 @@ function Sidebar() {
         setCurrThreadId(newThreadId);
 
         try {
-            const response = await fetch(`http://localhost:8080/api/thread/${newThreadId}`);
+            const response = await fetch(`${API_BASE_URL}/api/thread/${newThreadId}`, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    logout();
+                }
+                return;
+            }
+
             const res = await response.json();
             console.log(res);
             setPrevChats(res);
@@ -48,7 +75,20 @@ function Sidebar() {
 
     const deleteThread = async (threadId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/thread/${threadId}`, {method: "DELETE"});
+            const response = await fetch(`${API_BASE_URL}/api/thread/${threadId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${authToken}`
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    logout();
+                }
+                return;
+            }
+
             const res = await response.json();
             console.log(res);
 

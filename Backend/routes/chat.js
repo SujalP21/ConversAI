@@ -1,15 +1,18 @@
 import express from "express";
 import Thread from "../models/Thread.js";
 import getOpenAIAPIResponse from "../utils/openai.js";
+import authMiddleware from "../middleware/auth.js";
 
 const router = express.Router();
+router.use(authMiddleware);
 
 // Test route
 router.post("/test", async (req, res) => {
 try {
 const thread = new Thread({
-threadId: "test-thread-2",
-title: "Testing New Thread2"
+userId: req.user.userId,
+threadId: `test-thread-${Date.now()}`,
+title: "Testing New Thread"
 });
 
 
@@ -29,7 +32,7 @@ try {
 
 
     const threads = await Thread
-        .find({})
+        .find({ userId: req.user.userId })
         .sort({ updatedAt: -1 });
 
     return res.json(threads);
@@ -49,7 +52,10 @@ const { threadId } = req.params;
 
 try {
 
-    const thread = await Thread.findOne({ threadId });
+    const thread = await Thread.findOne({
+        threadId,
+        userId: req.user.userId
+    });
 
     if (!thread) {
         return res.status(404).json({ error: "Thread not found" });
@@ -72,7 +78,10 @@ const { threadId } = req.params;
 
 try {
 
-    const deletedThread = await Thread.findOneAndDelete({ threadId });
+    const deletedThread = await Thread.findOneAndDelete({
+        threadId,
+        userId: req.user.userId
+    });
 
     if (!deletedThread) {
         return res.status(404).json({ error: "Thread not found" });
@@ -102,12 +111,16 @@ if (!threadId || !message) {
 
 try {
 
-    let thread = await Thread.findOne({ threadId });
+    let thread = await Thread.findOne({
+        threadId,
+        userId: req.user.userId
+    });
 
     // If thread does not exist → create
     if (!thread) {
 
         thread = new Thread({
+            userId: req.user.userId,
             threadId,
             title: message,
             messages: [
