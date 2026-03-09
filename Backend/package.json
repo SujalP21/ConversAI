@@ -1,0 +1,17 @@
+{
+  "name": "gpt-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.23.0",
+    "nodemon": "^3.1.10",
+    "openai": "^5.23.2"
+  }
+}
